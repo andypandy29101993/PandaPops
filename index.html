@@ -1,0 +1,796 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PandaPops | Pop & Sweets</title>
+  <meta name="description" content="PandaPops — fizzy pop, sweet treats, and panda-approved goodies." />
+
+  <style>
+    :root{
+      --bg:#0b0b10;
+      --muted:#b8b8c6;
+      --text:#f4f4ff;
+      --line:rgba(255,255,255,.10);
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius:18px;
+      --p1:#ff6bb5;
+      --p2:#7cf3ff;
+      --p3:#ffe37c;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: radial-gradient(1200px 700px at 20% -10%, rgba(255,107,181,.22), transparent 55%),
+                  radial-gradient(900px 600px at 85% 10%, rgba(124,243,255,.18), transparent 50%),
+                  radial-gradient(900px 600px at 70% 110%, rgba(255,227,124,.12), transparent 50%),
+                  var(--bg);
+      color:var(--text);
+      min-height:100vh;
+    }
+    a{color:inherit;text-decoration:none}
+    .container{max-width:1100px;margin:0 auto;padding:18px}
+    header{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter: blur(10px);
+      background: rgba(11,11,16,.75);
+      border-bottom:1px solid var(--line);
+    }
+    .nav{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 0}
+    .brand{display:flex;align-items:center;gap:12px;min-width:220px}
+    .brand img{
+      width:44px;height:44px;object-fit:contain;border-radius:12px;
+      background:rgba(255,255,255,.06); padding:6px; border:1px solid var(--line);
+    }
+    .brand .title{display:flex;flex-direction:column;line-height:1.1}
+    .brand .title strong{font-size:16px;letter-spacing:.2px}
+    .brand .title span{font-size:12px;color:var(--muted)}
+    .navlinks{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+    .pill{
+      padding:9px 12px;border:1px solid var(--line);border-radius:999px;
+      background:rgba(255,255,255,.04);
+      transition:transform .12s ease, background .12s ease, border-color .12s ease;
+      font-size:13px;
+    }
+    .pill:hover{transform:translateY(-1px);background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.18)}
+    .actions{display:flex;align-items:center;gap:10px}
+    .search{
+      display:flex;align-items:center;gap:8px;
+      border:1px solid var(--line);border-radius:999px;padding:9px 12px;
+      background:rgba(255,255,255,.04);
+      min-width:230px;
+    }
+    .search input{width:100%; border:0; outline:0; background:transparent; color:var(--text); font-size:13px}
+    .btn{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.05);
+      color:var(--text);
+      padding:10px 12px;border-radius:12px;
+      cursor:pointer;
+      transition:transform .12s ease, background .12s ease, border-color .12s ease;
+      font-weight:650;
+    }
+    .btn:hover{transform:translateY(-1px);background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18)}
+    .btn.primary{border:0;background: linear-gradient(135deg, rgba(255,107,181,.95), rgba(124,243,255,.85));color:#0a0a10}
+    .btn:disabled{opacity:.45; cursor:not-allowed; transform:none}
+    .badge{
+      margin-left:8px; display:inline-flex;align-items:center;justify-content:center;
+      min-width:20px;height:20px;padding:0 6px;border-radius:999px;
+      background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.18);
+      font-size:12px;font-weight:800;color:var(--text);
+    }
+
+    .hero{display:grid; grid-template-columns: 1.15fr .85fr; gap:18px; align-items:stretch; padding:18px 0 10px}
+    .heroCard{
+      border:1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border-radius:var(--radius);
+      padding:22px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .glow{
+      position:absolute; inset:-60px -60px auto auto;
+      width:260px;height:260px;border-radius:50%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,107,181,.55), transparent 55%),
+                  radial-gradient(circle at 70% 70%, rgba(124,243,255,.45), transparent 58%);
+      filter: blur(8px);
+      opacity:.65;
+      pointer-events:none;
+    }
+    .hero h1{margin:0 0 8px; font-size:40px; line-height:1.05; letter-spacing:-.6px}
+    .hero p{margin:0 0 14px; color:var(--muted); font-size:15px; max-width:52ch}
+    .hero .cta{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
+    .note{
+      display:flex;gap:10px;align-items:flex-start;margin-top:14px;
+      padding:12px;border-radius:14px;background:rgba(0,0,0,.25);border:1px solid var(--line);
+      color:var(--muted);font-size:13px;
+    }
+    .spark{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,var(--p1),var(--p2));margin-top:4px;flex:none}
+    .side{display:flex;flex-direction:column;gap:12px}
+    .mini{border:1px solid var(--line);background:rgba(255,255,255,.04);border-radius:var(--radius);padding:16px}
+    .mini h3{margin:0 0 6px;font-size:14px}
+    .mini p{margin:0;color:var(--muted);font-size:13px}
+    .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+    .chip{font-size:12px;color:#0a0a10;font-weight:800;padding:6px 10px;border-radius:999px;border:0;background:linear-gradient(135deg, rgba(255,227,124,.95), rgba(255,107,181,.75))}
+
+    section{padding:18px 0}
+    .sectionTitle{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:12px}
+    .sectionTitle h2{margin:0;font-size:18px}
+    .sectionTitle small{color:var(--muted)}
+    .grid{display:grid;grid-template-columns: repeat(4, minmax(0,1fr));gap:12px}
+    .card{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      border-radius:var(--radius);
+      padding:14px;
+      box-shadow: 0 8px 20px rgba(0,0,0,.22);
+      display:flex;flex-direction:column;gap:10px;
+      min-height:240px;
+    }
+    .thumb{
+      border-radius:14px;border:1px solid var(--line);
+      background: linear-gradient(135deg, rgba(255,107,181,.25), rgba(124,243,255,.18));
+      height:92px; display:flex;align-items:center;justify-content:center; font-size:34px;
+    }
+    .card h4{margin:0;font-size:14px}
+    .card p{margin:0;color:var(--muted);font-size:13px;line-height:1.3}
+    .stockLine{color:var(--muted);font-size:12px;margin-top:-2px}
+    .row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto}
+    .price{font-weight:900}
+    .qtyBtn{display:flex;gap:8px;align-items:center}
+    .tiny{padding:8px 10px;border-radius:12px;font-size:13px;font-weight:800}
+
+    .drawerOverlay{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:stretch;justify-content:flex-end;z-index:100}
+    .drawer{
+      width:min(420px, 100%);
+      background:rgba(13,13,20,.96);
+      border-left:1px solid var(--line);
+      padding:16px;
+      display:flex;flex-direction:column;gap:12px;
+    }
+    .drawerHeader{display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .drawerHeader h3{margin:0}
+    .cartList{display:flex;flex-direction:column;gap:10px;overflow:auto;max-height:55vh;padding-right:6px}
+    .cartItem{
+      display:grid; grid-template-columns: 44px 1fr auto;
+      gap:10px; align-items:center;
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:10px;
+      background:rgba(255,255,255,.03);
+    }
+    .cartIcon{
+      width:44px;height:44px;border-radius:14px;
+      display:flex;align-items:center;justify-content:center;
+      background:rgba(255,255,255,.06);
+      border:1px solid var(--line);
+      font-size:22px;
+    }
+    .cartItem b{font-size:13px}
+    .cartItem small{display:block;color:var(--muted);margin-top:2px}
+    .cartControls{display:flex;gap:6px;align-items:center;justify-content:flex-end}
+    .cartControls button{min-width:34px}
+    .summary{
+      margin-top:auto;border:1px solid var(--line);border-radius:16px;padding:12px;background:rgba(255,255,255,.03);
+    }
+    .summaryLine{display:flex;justify-content:space-between;color:var(--muted);font-size:13px;margin:6px 0}
+    .summaryLine strong{color:var(--text)}
+    .footer{padding:22px 0 40px;color:var(--muted);border-top:1px solid var(--line);margin-top:20px;font-size:13px}
+
+    .modalOverlay{position:fixed; inset:0; background:rgba(0,0,0,.6); display:none; align-items:center; justify-content:center; z-index:120; padding:16px}
+    .modal{width:min(560px, 100%); border:1px solid var(--line); border-radius:22px; background: rgba(13,13,20,.96); box-shadow: var(--shadow); padding:16px}
+    .modalHead{display:flex;align-items:center;justify-content:space-between}
+    .modalHead h3{margin:0}
+    .form{display:grid; gap:10px; margin-top:10px}
+    .form .two{display:grid; grid-template-columns: 1fr 1fr; gap:10px}
+    label{font-size:12px;color:var(--muted)}
+    input{
+      width:100%; border:1px solid var(--line); border-radius:14px; padding:10px 12px;
+      background: rgba(255,255,255,.04); color: var(--text); outline:none;
+    }
+    .muted{color:var(--muted);font-size:13px}
+    .ok{display:flex;gap:10px;justify-content:flex-end;margin-top:12px;flex-wrap:wrap}
+
+    .paypalBox{border:1px solid var(--line); border-radius:18px; padding:12px; background:rgba(255,255,255,.03); margin-top:10px}
+    .paypalBox h4{margin:0 0 6px;font-size:14px}
+    #paypal-button-container{margin-top:10px}
+
+    .breakdown{
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:12px;
+      background:rgba(255,255,255,.03);
+    }
+    .breakdown h4{margin:0 0 8px;font-size:14px}
+    .itemsTable{width:100%;border-collapse:collapse;font-size:13px}
+    .itemsTable th,.itemsTable td{padding:8px 6px;border-bottom:1px solid rgba(255,255,255,.08);text-align:left}
+    .itemsTable th{color:var(--muted);font-weight:800;font-size:12px}
+    .itemsTable td:last-child,.itemsTable th:last-child{text-align:right}
+    .itemsTable td:nth-child(2), .itemsTable th:nth-child(2){text-align:center;width:64px}
+    .itemsTable tr:last-child td{border-bottom:none}
+
+    @media (max-width: 980px){
+      .grid{grid-template-columns: repeat(2, minmax(0,1fr))}
+      .hero{grid-template-columns: 1fr}
+      .search{min-width: 160px}
+    }
+    @media (max-width: 520px){
+      .nav{flex-wrap:wrap}
+      .brand{min-width:unset}
+      .actions{width:100%}
+      .search{flex:1}
+      .form .two{grid-template-columns:1fr}
+      .hero h1{font-size:32px}
+    }
+  </style>
+
+  <!-- PayPal JS SDK (replace client-id) -->
+  <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID_HERE&currency=GBP"></script>
+</head>
+
+<body>
+<header>
+  <div class="container">
+    <div class="nav">
+      <a class="brand" href="#top" aria-label="PandaPops home">
+        <img src="logo.png" alt="PandaPops logo" onerror="this.style.display='none'; this.nextElementSibling.style.marginLeft='0';" />
+        <div class="title">
+          <strong>PandaPops</strong>
+          <span>Pop • Sweets • Panda-approved</span>
+        </div>
+      </a>
+
+      <nav class="navlinks" aria-label="Primary">
+        <a class="pill" href="#shop">Shop</a>
+        <a class="pill" href="#about">About</a>
+        <a class="pill" href="#faq">FAQ</a>
+      </nav>
+
+      <div class="actions">
+        <div class="search" role="search">
+          <span aria-hidden="true">🔎</span>
+          <input id="search" type="search" placeholder="Search pop & sweets…" />
+        </div>
+        <button class="btn" id="openCart" aria-label="Open cart">
+          Cart <span class="badge" id="cartCount">0</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="top" class="container">
+  <div class="hero">
+    <div class="heroCard">
+      <div class="glow"></div>
+      <h1>Sweet treats.<br/>Fizzy pop.<br/>Big panda vibes.</h1>
+      <p>
+        PandaPops — sweets, candy bundles, and fizzy favourites.
+        Delivery is <strong>£1.99 1st Class</strong>, or <strong>FREE over £40</strong>.
+      </p>
+      <div class="cta">
+        <a class="btn primary" href="#shop">Shop bestsellers</a>
+        <button class="btn" id="openCheckoutFromHero">Checkout</button>
+      </div>
+      <div class="note">
+        <div class="spark"></div>
+        <div>
+          <div><strong style="color:var(--text)">Stock:</strong> live stock shown on items (cart reserves stock).</div>
+          <div><strong style="color:var(--text)">Payments:</strong> PayPal button included.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="side">
+      <div class="mini">
+        <h3>🚚 Delivery</h3>
+        <p class="muted">£1.99 1st Class — free over £40.</p>
+        <div class="chips">
+          <span class="chip">UK £</span>
+          <span class="chip">PayPal</span>
+          <span class="chip">Stock levels</span>
+        </div>
+      </div>
+      <div class="mini">
+        <h3>✨ New: Mystery Bag</h3>
+        <p>Limited stock mystery sweets bundle!</p>
+      </div>
+    </div>
+  </div>
+
+  <section id="shop">
+    <div class="sectionTitle">
+      <h2>Shop Pop & Sweets</h2>
+      <small id="resultCount">Showing items</small>
+    </div>
+    <div class="grid" id="productGrid" aria-live="polite"></div>
+  </section>
+
+  <section id="about">
+    <div class="sectionTitle">
+      <h2>About PandaPops</h2>
+      <small>Small, sweet, and friendly</small>
+    </div>
+    <div class="heroCard" style="padding:18px">
+      <p style="margin:0;color:var(--muted);font-size:14px;line-height:1.5">
+        This template includes stock levels, cart, checkout breakdown, and PayPal payments.
+      </p>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="sectionTitle">
+      <h2>FAQ</h2>
+      <small>Quick answers</small>
+    </div>
+    <div class="grid" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+      <div class="card">
+        <h4>How much is delivery?</h4>
+        <p>£1.99 1st Class — free over £40.</p>
+      </div>
+      <div class="card">
+        <h4>How does stock work?</h4>
+        <p>Stock shown is available minus what’s currently in your cart.</p>
+      </div>
+      <div class="card">
+        <h4>Do I need anything for PayPal?</h4>
+        <p>Yes — paste your PayPal Client ID in the page head.</p>
+      </div>
+      <div class="card">
+        <h4>Can stock decrease permanently after purchase?</h4>
+        <p>Yes — that needs a small backend. Tell me your hosting and I’ll add it.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer">
+    <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap">
+      <div>© <span id="year"></span> PandaPops</div>
+      <div class="muted">Made with 🐼 + 🍭</div>
+    </div>
+  </div>
+</main>
+
+<!-- Cart Drawer -->
+<div class="drawerOverlay" id="drawerOverlay" aria-hidden="true">
+  <aside class="drawer" role="dialog" aria-label="Shopping cart">
+    <div class="drawerHeader">
+      <h3>Your Cart</h3>
+      <button class="btn" id="closeCart" aria-label="Close cart">Close</button>
+    </div>
+
+    <div class="cartList" id="cartList"></div>
+
+    <div class="summary">
+      <div class="summaryLine"><span>Subtotal</span><strong id="subTotal">£0.00</strong></div>
+      <div class="summaryLine"><span>1st Class</span><strong id="delivery">£0.00</strong></div>
+      <div class="summaryLine" style="border-top:1px solid var(--line);padding-top:8px;margin-top:8px">
+        <span><strong>Total</strong></span><strong id="total">£0.00</strong>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
+        <button class="btn" id="clearCart" style="flex:1">Clear</button>
+        <button class="btn primary" id="checkoutBtn" style="flex:1">Checkout</button>
+      </div>
+      <p class="muted" style="margin:10px 0 0">Pay securely with PayPal in checkout.</p>
+    </div>
+  </aside>
+</div>
+
+<!-- Checkout Modal -->
+<div class="modalOverlay" id="modalOverlay" aria-hidden="true">
+  <div class="modal" role="dialog" aria-label="Checkout">
+    <div class="modalHead">
+      <h3>Checkout</h3>
+      <button class="btn" id="closeModal">Close</button>
+    </div>
+
+    <p class="muted" style="margin:8px 0 0">
+      Delivery: <strong>£1.99 1st Class</strong> — <strong>FREE over £40</strong>.
+    </p>
+
+    <form class="form" id="checkoutForm">
+      <div class="two">
+        <div>
+          <label for="name">Name</label>
+          <input id="name" required placeholder="Your name" />
+        </div>
+        <div>
+          <label for="email">Email</label>
+          <input id="email" type="email" required placeholder="you@example.com" />
+        </div>
+      </div>
+
+      <div>
+        <label for="address">Address</label>
+        <input id="address" required placeholder="House number, street, town, postcode" />
+      </div>
+
+      <!-- Breakdown -->
+      <div class="breakdown">
+        <h4>Order breakdown</h4>
+        <table class="itemsTable" aria-label="Order items breakdown">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Qty</th>
+              <th>Line total</th>
+            </tr>
+          </thead>
+          <tbody id="breakdownBody"></tbody>
+        </table>
+
+        <div class="heroCard" style="padding:12px;margin-top:10px">
+          <div class="summaryLine"><span>Items</span><strong id="modalItems">0</strong></div>
+          <div class="summaryLine"><span>Subtotal</span><strong id="modalSubtotal">£0.00</strong></div>
+          <div class="summaryLine"><span>1st Class</span><strong id="modalDelivery">£0.00</strong></div>
+          <div class="summaryLine" style="border-top:1px solid var(--line);padding-top:8px;margin-top:8px">
+            <span><strong>Total</strong></span><strong id="modalTotal">£0.00</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="paypalBox">
+        <h4>Pay with PayPal</h4>
+        <div class="muted">
+          If the button doesn’t show, paste your PayPal Client ID in the page head.
+        </div>
+        <div id="paypal-button-container"></div>
+      </div>
+
+      <div class="ok">
+        <button type="button" class="btn" id="fillDemo">Fill demo details</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // ===== Settings =====
+  const CURRENCY = "GBP";
+  const DELIVERY_FEE = 1.99;   // 1st class
+  const FREE_OVER = 40.00;     // free over £40
+
+  // ===== Stock rules =====
+  // Default 100 each, except pick-mix and mystery are 20.
+  const DEFAULT_STOCK = 100;
+  const LOW_STOCK = 20;
+
+  // ===== Products =====
+  const PRODUCTS = [
+    { id: "pop-cola",    name: "Classic Cola Pop",     price: 1.49, emoji: "🥤", desc: "Ice-cold fizz with a classic taste.", tag:"pop", stock: DEFAULT_STOCK },
+    { id: "pop-orange",  name: "Orange Fizz Pop",      price: 1.39, emoji: "🍊", desc: "Bright citrus bubbles for sunny vibes.", tag:"pop", stock: DEFAULT_STOCK },
+    { id: "pop-grape",   name: "Grape Sparkle Pop",    price: 1.59, emoji: "🍇", desc: "Sweet grape sparkle with a bold finish.", tag:"pop", stock: DEFAULT_STOCK },
+    { id: "sour-belts",  name: "Sour Rainbow Belts",   price: 2.49, emoji: "🌈", desc: "Tangy, chewy, and dangerously moreish.", tag:"sweets", stock: DEFAULT_STOCK },
+    { id: "jelly-bears", name: "Jelly Bears",          price: 1.99, emoji: "🐻", desc: "Soft fruity gummies in a mix of flavours.", tag:"sweets", stock: DEFAULT_STOCK },
+    { id: "choco-bites", name: "Choco Panda Bites",    price: 2.79, emoji: "🍫", desc: "Chocolatey bites with a crunchy snap.", tag:"sweets", stock: DEFAULT_STOCK },
+    { id: "pick-mix",    name: "Panda Pick & Mix Bag", price: 6.99, emoji: "🛍️", desc: "A generous mix of chewy, sour & sweet.", tag:"bundle", stock: LOW_STOCK },
+    { id: "mystery",     name: "Mystery Treat Bag",    price: 4.99, emoji: "🎁", desc: "A surprise mix — limited stock!", tag:"bundle", stock: LOW_STOCK },
+  ];
+
+  // ===== State =====
+  const cart = new Map(); // id -> qty
+
+  // ===== Helpers =====
+  const money = (n) => "£" + n.toFixed(2);
+  const byId = (id) => document.getElementById(id);
+  const getQty = (id) => cart.get(id) || 0;
+  const findProduct = (id) => PRODUCTS.find(p => p.id === id);
+
+  function cartCount(){
+    let c = 0;
+    for (const qty of cart.values()) c += qty;
+    return c;
+  }
+
+  function cartSubtotal(){
+    let s = 0;
+    for (const [id, qty] of cart.entries()){
+      const p = findProduct(id);
+      if (p) s += p.price * qty;
+    }
+    return s;
+  }
+
+  function calcDelivery(subtotal){
+    if (subtotal <= 0) return 0;
+    return subtotal >= FREE_OVER ? 0 : DELIVERY_FEE;
+  }
+
+  function calcTotal(){
+    const subtotal = cartSubtotal();
+    const delivery = calcDelivery(subtotal);
+    return { subtotal, delivery, total: subtotal + delivery };
+  }
+
+  // Stock available = product stock - qty currently in cart
+  function availableStock(id){
+    const p = findProduct(id);
+    if (!p) return 0;
+    return Math.max(0, p.stock - getQty(id));
+  }
+
+  // ===== Render products =====
+  const grid = byId("productGrid");
+  const resultCount = byId("resultCount");
+
+  function renderProducts(filterText=""){
+    const q = filterText.trim().toLowerCase();
+    const list = PRODUCTS.filter(p =>
+      !q || p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q) || p.tag.toLowerCase().includes(q)
+    );
+
+    resultCount.textContent = `Showing ${list.length} item${list.length===1?"":"s"}`;
+    grid.innerHTML = "";
+
+    list.forEach(p => {
+      const avail = availableStock(p.id);
+      const out = avail <= 0;
+
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <div class="thumb" aria-hidden="true">${p.emoji}</div>
+        <div>
+          <h4>${p.name}</h4>
+          <p>${p.desc}</p>
+          <div class="stockLine">${out ? "Out of stock" : `In stock: ${avail}`}</div>
+        </div>
+        <div class="row">
+          <div class="price">${money(p.price)}</div>
+          <div class="qtyBtn">
+            <button class="btn tiny" aria-label="Decrease ${p.name}" data-dec="${p.id}">−</button>
+            <span class="badge" id="qty-${p.id}">${getQty(p.id)}</span>
+            <button class="btn tiny" aria-label="Increase ${p.name}" data-inc="${p.id}" ${out ? "disabled" : ""}>+</button>
+          </div>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  // ===== Cart drawer =====
+  const overlay = byId("drawerOverlay");
+  const cartList = byId("cartList");
+  const cartCountEl = byId("cartCount");
+  const subTotalEl = byId("subTotal");
+  const deliveryEl = byId("delivery");
+  const totalEl = byId("total");
+
+  function openCart(){
+    overlay.style.display = "flex";
+    overlay.setAttribute("aria-hidden", "false");
+    renderCart();
+  }
+  function closeCart(){
+    overlay.style.display = "none";
+    overlay.setAttribute("aria-hidden", "true");
+  }
+
+  function renderCart(){
+    cartCountEl.textContent = cartCount();
+    cartList.innerHTML = "";
+
+    if (cart.size === 0){
+      cartList.innerHTML = `<div class="muted" style="padding:10px">Your cart is empty — add something tasty 🐼🍬</div>`;
+    } else {
+      for (const [id, qty] of cart.entries()){
+        const p = findProduct(id);
+        if (!p) continue;
+        const avail = availableStock(id); // remaining after cart qty (will be stock-qty)
+        const item = document.createElement("div");
+        item.className = "cartItem";
+        item.innerHTML = `
+          <div class="cartIcon" aria-hidden="true">${p.emoji}</div>
+          <div>
+            <b>${p.name}</b>
+            <small>${money(p.price)} each • Stock left: ${avail}</small>
+          </div>
+          <div class="cartControls">
+            <button class="btn tiny" data-dec="${p.id}" aria-label="Decrease ${p.name}">−</button>
+            <span class="badge">${qty}</span>
+            <button class="btn tiny" data-inc="${p.id}" aria-label="Increase ${p.name}" ${avail <= 0 ? "disabled" : ""}>+</button>
+            <button class="btn tiny" data-remove="${p.id}" aria-label="Remove ${p.name}">✕</button>
+          </div>
+        `;
+        cartList.appendChild(item);
+      }
+    }
+
+    const { subtotal, delivery, total } = calcTotal();
+    subTotalEl.textContent = money(subtotal);
+    deliveryEl.textContent = money(delivery);
+    totalEl.textContent = money(total);
+
+    // Update product qty badges too
+    PRODUCTS.forEach(p => {
+      const el = document.getElementById(`qty-${p.id}`);
+      if (el) el.textContent = getQty(p.id);
+    });
+
+    updateModalSummary();
+    rerenderPayPalButtons();
+    renderBreakdown();
+  }
+
+  function add(id, amount){
+    const p = findProduct(id);
+    if (!p) return;
+
+    const current = getQty(id);
+    const next = Math.max(0, current + amount);
+
+    // Enforce stock limit
+    if (next > p.stock) return;
+
+    if (next === 0) cart.delete(id);
+    else cart.set(id, next);
+
+    renderCart();
+    renderProducts(byId("search").value);
+  }
+
+  // ===== Checkout modal =====
+  const modalOverlay = byId("modalOverlay");
+  const modalItems = byId("modalItems");
+  const modalSubtotal = byId("modalSubtotal");
+  const modalDelivery = byId("modalDelivery");
+  const modalTotal = byId("modalTotal");
+  const breakdownBody = byId("breakdownBody");
+
+  function openModal(){
+    modalOverlay.style.display = "flex";
+    modalOverlay.setAttribute("aria-hidden", "false");
+    updateModalSummary();
+    renderBreakdown();
+    rerenderPayPalButtons();
+  }
+  function closeModal(){
+    modalOverlay.style.display = "none";
+    modalOverlay.setAttribute("aria-hidden", "true");
+  }
+
+  function updateModalSummary(){
+    const items = cartCount();
+    const { subtotal, delivery, total } = calcTotal();
+    modalItems.textContent = String(items);
+    modalSubtotal.textContent = money(subtotal);
+    modalDelivery.textContent = money(delivery);
+    modalTotal.textContent = money(total);
+  }
+
+  function renderBreakdown(){
+    if (!breakdownBody) return;
+
+    breakdownBody.innerHTML = "";
+
+    if (cartCount() === 0){
+      breakdownBody.innerHTML = `<tr><td colspan="3" class="muted">No items yet.</td></tr>`;
+      return;
+    }
+
+    // Sort by product name (nice & tidy)
+    const lines = Array.from(cart.entries())
+      .map(([id, qty]) => {
+        const p = findProduct(id);
+        return { id, qty, name: p?.name || id, price: p?.price || 0 };
+      })
+      .sort((a,b) => a.name.localeCompare(b.name));
+
+    lines.forEach(line => {
+      const tr = document.createElement("tr");
+      const lineTotal = line.price * line.qty;
+      tr.innerHTML = `
+        <td>${line.name}</td>
+        <td>${line.qty}</td>
+        <td>${money(lineTotal)}</td>
+      `;
+      breakdownBody.appendChild(tr);
+    });
+  }
+
+  // ===== PayPal integration =====
+  let paypalButtonsInstance = null;
+
+  function rerenderPayPalButtons(){
+    const container = document.getElementById("paypal-button-container");
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    if (typeof paypal === "undefined"){
+      container.innerHTML = `<div class="muted">PayPal script not loaded. Add your Client ID in the page head.</div>`;
+      return;
+    }
+
+    const items = cartCount();
+    if (items === 0){
+      container.innerHTML = `<div class="muted">Add items to your cart to pay with PayPal.</div>`;
+      return;
+    }
+
+    const { subtotal, delivery, total } = calcTotal();
+
+    paypalButtonsInstance = paypal.Buttons({
+      style: { layout: "vertical", shape: "pill", label: "paypal" },
+
+      createOrder: function(data, actions) {
+        return actions.order.create({
+          purchase_units: [{
+            amount: {
+              currency_code: CURRENCY,
+              value: total.toFixed(2),
+              breakdown: {
+                item_total: { currency_code: CURRENCY, value: subtotal.toFixed(2) },
+                shipping:   { currency_code: CURRENCY, value: delivery.toFixed(2) }
+              }
+            },
+            items: Array.from(cart.entries()).map(([id, qty]) => {
+              const p = findProduct(id);
+              return {
+                name: p ? p.name : id,
+                unit_amount: { currency_code: CURRENCY, value: (p ? p.price : 0).toFixed(2) },
+                quantity: String(qty)
+              };
+            })
+          }]
+        });
+      },
+
+      onApprove: function(data, actions) {
+        return actions.order.capture().then(function(details) {
+          alert("Payment successful! ✅\n\nThanks, " + (details.payer?.name?.given_name || "friend") + " — your order is captured.");
+          cart.clear();
+          renderCart();
+          closeModal();
+        });
+      },
+
+      onError: function(err) {
+        console.error(err);
+        alert("PayPal error. Check your Client ID and try again.");
+      }
+    });
+
+    paypalButtonsInstance.render("#paypal-button-container");
+  }
+
+  // ===== Events =====
+  document.addEventListener("click", (e) => {
+    const inc = e.target?.getAttribute?.("data-inc");
+    const dec = e.target?.getAttribute?.("data-dec");
+    const rem = e.target?.getAttribute?.("data-remove");
+    if (inc) add(inc, +1);
+    if (dec) add(dec, -1);
+    if (rem) add(rem, -999);
+  });
+
+  byId("openCart").addEventListener("click", openCart);
+  byId("closeCart").addEventListener("click", closeCart);
+  overlay.addEventListener("click", (e) => { if (e.target === overlay) closeCart(); });
+
+  byId("clearCart").addEventListener("click", () => { cart.clear(); renderCart(); });
+  byId("checkoutBtn").addEventListener("click", () => { closeCart(); openModal(); });
+  byId("openCheckoutFromHero").addEventListener("click", openModal);
+
+  byId("closeModal").addEventListener("click", closeModal);
+  modalOverlay.addEventListener("click", (e) => { if (e.target === modalOverlay) closeModal(); });
+
+  byId("search").addEventListener("input", (e) => renderProducts(e.target.value));
+
+  byId("fillDemo").addEventListener("click", () => {
+    byId("name").value = "Panda Fan";
+    byId("email").value = "panda@example.com";
+    byId("address").value = "1 Bamboo Lane, Panda Town, AB1 2CD";
+  });
+
+  // Init
+  byId("year").textContent = new Date().getFullYear();
+  renderProducts();
+  renderCart();
+  rerenderPayPalButtons();
+</script>
+</body>
+</html>
